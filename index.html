@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="map-controls">
+        <button id="request-taxi">طلب تكسي</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        let map = L.map('map').setView([33.3152, 44.3661], 13); // بغداد كنقطة افتراضية
+
+        // OpenStreetMap layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Get current location
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLat = position.coords.latitude;
+                const userLon = position.coords.longitude;
+
+                L.marker([userLat, userLon]).addTo(map)
+                    .bindPopup('موقعك الحالي')
+                    .openPopup();
+
+                map.setView([userLat, userLon], 13);
+            },
+            (error) => {
+                alert('فشل العثور على موقعك! الرجاء التحقق من إعدادات الموقع.');
+            }
+        );
+
+        // Request taxi button
+        document.getElementById('request-taxi').addEventListener('click', function () {
+            alert('تم إرسال طلب تكسي!');
+        });
+    </script>
+</body>
+</html>
